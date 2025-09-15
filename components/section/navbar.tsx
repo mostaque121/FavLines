@@ -1,6 +1,6 @@
 "use client";
 
-import { Search, X } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -53,14 +53,12 @@ export default function Navbar() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => setIsSearchOpen(!isSearchOpen)}
+              onClick={() =>
+                isSearchOpen ? setIsSearchOpen(false) : setIsSearchOpen(true)
+              }
               className="p-2"
             >
-              {isSearchOpen ? (
-                <X className="h-5 w-5" />
-              ) : (
-                <Search className="h-5 w-5" />
-              )}
+              <Search className="h-5 w-5" />
             </Button>
             <AddMenuPopover />
           </div>

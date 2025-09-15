@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useQuery } from "@tanstack/react-query";
-import { Music, PenTool } from "lucide-react";
+import { Music, PenTool, X } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -57,7 +57,10 @@ export default function SearchBar({ closeSearchBar }: SectionProps) {
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
-        closeSearchBar();
+        // Add a small delay (e.g., 50ms) before closing
+        setTimeout(() => {
+          closeSearchBar();
+        }, 300);
       }
     },
     [closeSearchBar]
@@ -73,22 +76,32 @@ export default function SearchBar({ closeSearchBar }: SectionProps) {
   return (
     <div ref={containerRef} className="relative container px-4 md:px-8 py-6">
       {/* Toggle Buttons */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex justify-between gap-3 items-center">
+        <div className="flex gap-2 mb-4">
+          <Button
+            variant={searchType === "lyrics" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSearchType("lyrics")}
+          >
+            <Music className="h-4 w-4 mr-2" />
+            Lyrics
+          </Button>
+          <Button
+            variant={searchType === "poems" ? "default" : "outline"}
+            size="sm"
+            onClick={() => setSearchType("poems")}
+          >
+            <PenTool className="h-4 w-4 mr-2" />
+            Poems
+          </Button>
+        </div>
         <Button
-          variant={searchType === "lyrics" ? "default" : "outline"}
+          variant="ghost"
           size="sm"
-          onClick={() => setSearchType("lyrics")}
+          onClick={() => closeSearchBar()}
+          className="p-2"
         >
-          <Music className="h-4 w-4 mr-2" />
-          Lyrics
-        </Button>
-        <Button
-          variant={searchType === "poems" ? "default" : "outline"}
-          size="sm"
-          onClick={() => setSearchType("poems")}
-        >
-          <PenTool className="h-4 w-4 mr-2" />
-          Poems
+          <X className="h-5 w-5" />
         </Button>
       </div>
 

@@ -30,9 +30,9 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-2 md:space-x-4">
             <Link
-              href="/lyrics/page/1"
+              href="/lyric/page/1"
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                pathname === "/lyrics"
+                pathname.startsWith("/lyrics")
                   ? "text-primary underline underline-offset-4"
                   : "text-muted-foreground"
               }`}
@@ -40,9 +40,9 @@ export default function Navbar() {
               Lyrics
             </Link>
             <Link
-              href="/poems"
+              href="/poem/page/1"
               className={`text-sm font-medium transition-colors hover:text-primary ${
-                pathname === "/poems/page/1"
+                pathname.startsWith("/poems")
                   ? "text-primary underline underline-offset-4"
                   : "text-muted-foreground"
               }`}

@@ -1,6 +1,11 @@
-import { getPoemBySLug } from "@/app/action/poem";
+import { getPoemBySLug, getPoemsMeta } from "@/app/action/poem";
 import { PoemDisplay } from "@/components/section/poem-display";
 import { notFound } from "next/navigation";
+
+export async function generateStaticParams() {
+  const { slugs } = await getPoemsMeta();
+  return slugs.map((slug) => ({ slug }));
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;

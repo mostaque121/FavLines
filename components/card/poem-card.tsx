@@ -43,7 +43,7 @@ export function PoemCard({
 
       {/* Content */}
       <div className="p-4">
-        <Link href={`/poem/${slug}`}>
+        <Link prefetch={false} href={`/poem/${slug}`}>
           <h3 className="text-lg hover:text-primary font-bold text-foreground transition-color duration-200 line-clamp-2">
             {title}
           </h3>
@@ -81,7 +81,7 @@ export function PoemCardSmall({
         />
       </div>
       <div className="w-full">
-        <Link href={`/poem/${slug}`}>
+        <Link prefetch={false} href={`/poem/${slug}`}>
           <h3 className="text-sm font-medium text-foreground hover:text-primary transition-color duration-200 line-clamp-">
             {title}
           </h3>

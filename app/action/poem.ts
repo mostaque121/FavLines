@@ -1,4 +1,5 @@
 "use server";
+import { Prisma } from "@/generated/prisma";
 import { checkAccess } from "@/lib/check-access";
 import { prisma } from "@/lib/prisma";
 import { poemSchema } from "@/lib/zod";
@@ -261,3 +262,42 @@ export const getPoemsByPage = unstable_cache(
     tags: ["poems_by_page"],
   }
 );
+
+export interface PoemSearchResult {
+  id: string;
+  title: string;
+  slug: string;
+  poet: { name: string };
+}
+export async function searchPoems(query: string): Promise<PoemSearchResult[]> {
+  if (!query.trim()) return [];
+
+  let whereClause: Prisma.PoemWhereInput = {};
+
+  const searchCondition = {
+    contains: query,
+    mode: "insensitive" as Prisma.QueryMode,
+  };
+
+  whereClause = {
+    ...whereClause,
+    OR: [
+      { title: searchCondition },
+      { body: searchCondition },
+      { poet: { name: searchCondition } },
+    ],
+  };
+
+  const lyrics = await prisma.poem.findMany({
+    where: whereClause,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      poet: { select: { name: true } },
+    },
+    take: 5,
+  });
+
+  return lyrics;
+}

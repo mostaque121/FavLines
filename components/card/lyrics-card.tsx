@@ -50,7 +50,7 @@ export function LyricsCard({
 
       {/* Content */}
       <div className="p-4">
-        <Link href={`/lyric/${slug}`}>
+        <Link href={`/lyric/${slug}`} prefetch={false}>
           <h3 className="text-lg hover:text-primary font-bold text-foreground transition-color duration-200 line-clamp-2">
             {title}
           </h3>
@@ -90,7 +90,7 @@ export function LyricsCardSmall({
         />
       </div>
       <div className="w-full">
-        <Link href={`/lyric/${slug}`}>
+        <Link prefetch={false} href={`/lyric/${slug}`}>
           <h3 className="text-sm font-medium hover:text-primary  text-foreground duration-150 transition-colors line-clamp-">
             {title}
           </h3>

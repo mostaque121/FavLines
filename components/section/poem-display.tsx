@@ -3,7 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Calendar, User } from "lucide-react";
 import Image from "next/image";
 import "react-quill-new/dist/quill.snow.css";
-import PoemAction from "../admin-action/poem-action";
+import { PoemAction } from "../admin-action/action-menu";
 import Favourite from "../card/heart";
 import FavouritePoems from "../content/favourite-poems";
 import PopularPoemTags from "../content/popular-poem-tags";
@@ -49,7 +49,7 @@ export function PoemDisplay({ poem, slug }: PoemDisplayProps) {
       {/* Header */}
       <header className="text-center mb-12 relative">
         <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
-          {poem.title}
+          {poem.title} <PoemAction poem={poem} />
         </h1>
 
         <div className="flex flex-wrap justify-center items-center gap-4 text-muted-foreground mb-8">
@@ -70,9 +70,6 @@ export function PoemDisplay({ poem, slug }: PoemDisplayProps) {
           </div>
         </div>
       </header>
-
-      {/* Poem Action Buttons */}
-      <PoemAction poem={poem} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 md:gap-0 gap-16">
         {/* Main Content */}

@@ -1,6 +1,11 @@
-import { getLyricsBySLug } from "@/app/action/lyrics";
+import { getLyricsBySLug, getLyricsMeta } from "@/app/action/lyrics";
 import { LyricsDisplay } from "@/components/section/lyrics-display";
 import { notFound } from "next/navigation";
+
+export async function generateStaticParams() {
+  const { slugs } = await getLyricsMeta();
+  return slugs.map((slug) => ({ slug }));
+}
 
 interface PageProps {
   params: Promise<{ slug: string }>;

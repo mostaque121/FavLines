@@ -36,23 +36,23 @@ type lyricsFormValues = z.infer<typeof lyricsSchema>;
 
 interface LyricsFormProps {
   onCloseForm?: () => void;
-  lyrics?: Lyrics;
+  item?: Lyrics;
 }
 
-export default function LyricsForm({ onCloseForm, lyrics }: LyricsFormProps) {
-  const isEditMode = !!lyrics;
+export default function LyricsForm({ onCloseForm, item }: LyricsFormProps) {
+  const isEditMode = !!item;
   const { tags, artists, albums } = useData();
 
   const defaultValues: Partial<lyricsFormValues> = {
-    title: lyrics?.title || "",
-    slug: lyrics?.slug || "",
-    imageUrl: lyrics?.imageUrl || "",
-    artistId: lyrics?.artistId || "",
-    albumId: lyrics?.albumId || "",
-    body: lyrics?.body || "",
-    tags: lyrics?.tags || [],
-    favourite: lyrics?.favourite || false,
-    ytLink: lyrics?.ytLink || "",
+    title: item?.title || "",
+    slug: item?.slug || "",
+    imageUrl: item?.imageUrl || "",
+    artistId: item?.artistId || "",
+    albumId: item?.albumId || "",
+    body: item?.body || "",
+    tags: item?.tags || [],
+    favourite: item?.favourite || false,
+    ytLink: item?.ytLink || "",
   };
 
   const form = useForm<lyricsFormValues>({
@@ -62,8 +62,8 @@ export default function LyricsForm({ onCloseForm, lyrics }: LyricsFormProps) {
 
   async function onSubmit(data: lyricsFormValues) {
     try {
-      if (lyrics) {
-        await updateLyrics(lyrics.id, data);
+      if (item) {
+        await updateLyrics(item.id, data);
         toast.success("Lyrics Updated", {
           description: "Lyrics has been Updated successfully.",
         });
@@ -127,6 +127,7 @@ export default function LyricsForm({ onCloseForm, lyrics }: LyricsFormProps) {
                   <FormControl>
                     <SlugInput
                       onGenerate={field.onChange}
+                      initialValue={field.value}
                       placeholder="Slug"
                       {...field}
                     />

@@ -1,4 +1,5 @@
 "use server";
+import { Prisma } from "@/generated/prisma";
 import { checkAccess } from "@/lib/check-access";
 import { prisma } from "@/lib/prisma";
 import { lyricsSchema } from "@/lib/zod";
@@ -275,3 +276,45 @@ export const getLyricsByPage = unstable_cache(
     tags: ["lyrics_by_page"],
   }
 );
+
+export interface LyricsSearchResult {
+  id: string;
+  title: string;
+  slug: string;
+  artist: { name: string };
+}
+
+export async function searchLyrics(
+  query: string
+): Promise<LyricsSearchResult[]> {
+  if (!query.trim()) return [];
+
+  let whereClause: Prisma.LyricsWhereInput = {};
+
+  const searchCondition = {
+    contains: query,
+    mode: "insensitive" as Prisma.QueryMode,
+  };
+
+  whereClause = {
+    ...whereClause,
+    OR: [
+      { title: searchCondition },
+      { body: searchCondition },
+      { artist: { name: searchCondition } },
+    ],
+  };
+
+  const lyrics = await prisma.lyrics.findMany({
+    where: whereClause,
+    select: {
+      id: true,
+      title: true,
+      slug: true,
+      artist: { select: { name: true } },
+    },
+    take: 5,
+  });
+
+  return lyrics;
+}

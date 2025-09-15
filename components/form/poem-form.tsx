@@ -36,22 +36,22 @@ type PoemFormValues = z.infer<typeof poemSchema>;
 
 interface PoemFormProps {
   onCloseForm?: () => void;
-  poem?: Poem;
+  item?: Poem;
 }
 
-export default function PoemForm({ onCloseForm, poem }: PoemFormProps) {
-  const isEditMode = !!poem;
+export default function PoemForm({ onCloseForm, item }: PoemFormProps) {
+  const isEditMode = !!item;
   const { tags, poets } = useData();
 
   const defaultValues: Partial<PoemFormValues> = {
-    title: poem?.title || "",
-    slug: poem?.slug || "",
-    imageUrl: poem?.imageUrl || "",
-    poetId: poem?.poetId || "",
-    body: poem?.body || "",
-    tags: poem?.tags || [],
-    favourite: poem?.favourite || false,
-    ytLink: poem?.ytLink || "",
+    title: item?.title || "",
+    slug: item?.slug || "",
+    imageUrl: item?.imageUrl || "",
+    poetId: item?.poetId || "",
+    body: item?.body || "",
+    tags: item?.tags || [],
+    favourite: item?.favourite || false,
+    ytLink: item?.ytLink || "",
   };
 
   const form = useForm<PoemFormValues>({
@@ -61,8 +61,8 @@ export default function PoemForm({ onCloseForm, poem }: PoemFormProps) {
 
   async function onSubmit(data: PoemFormValues) {
     try {
-      if (poem?.id) {
-        await updatePoem(poem.id, data);
+      if (item?.id) {
+        await updatePoem(item.id, data);
         toast.success("Poem Updated", {
           description: "Poem has been Updated successfully.",
         });
@@ -122,7 +122,7 @@ export default function PoemForm({ onCloseForm, poem }: PoemFormProps) {
               name="slug"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Link</FormLabel>
+                  <FormLabel>Slug</FormLabel>
                   <FormControl>
                     <SlugInput
                       initialValue={field.value}

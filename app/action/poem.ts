@@ -281,11 +281,7 @@ export async function searchPoems(query: string): Promise<PoemSearchResult[]> {
 
   whereClause = {
     ...whereClause,
-    OR: [
-      { title: searchCondition },
-      { body: searchCondition },
-      { poet: { name: searchCondition } },
-    ],
+    OR: [{ title: searchCondition }, { poet: { name: searchCondition } }],
   };
 
   const lyrics = await prisma.poem.findMany({

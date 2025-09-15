@@ -9,7 +9,8 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import { Music, PenTool } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
 export interface LyricsSearchResult {
   id: string;
   title: string;
@@ -23,13 +24,20 @@ export interface PoemSearchResult {
   slug: string;
   poet: { name: string };
 }
+
 type SearchType = "lyrics" | "poems";
 
-export default function SearchBar() {
+interface SectionProps {
+  closeSearchBar: () => void;
+}
+
+export default function SearchBar({ closeSearchBar }: SectionProps) {
   const [searchType, setSearchType] = useState<SearchType>("lyrics");
   const [searchQuery, setSearchQuery] = useState("");
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
+
   const { data: searchResults = [], isFetching } = useQuery<
     LyricsSearchResult[] | PoemSearchResult[]
   >({
@@ -43,8 +51,27 @@ export default function SearchBar() {
     enabled: !!debouncedSearchQuery.trim(),
   });
 
+  const handleClickOutside = useCallback(
+    (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        closeSearchBar();
+      }
+    },
+    [closeSearchBar]
+  );
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
   return (
-    <div className="relative container px-4 md:px-8 py-6">
+    <div ref={containerRef} className="relative container px-4 md:px-8 py-6">
       {/* Toggle Buttons */}
       <div className="flex gap-2 mb-4">
         <Button
@@ -92,6 +119,7 @@ export default function SearchBar() {
               }
               prefetch={false}
               key={result.id}
+              onClick={closeSearchBar}
             >
               <div className="p-3 rounded-lg border hover:bg-muted/50 cursor-pointer transition-colors">
                 <div className="flex items-center justify-between">

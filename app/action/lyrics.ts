@@ -298,11 +298,7 @@ export async function searchLyrics(
 
   whereClause = {
     ...whereClause,
-    OR: [
-      { title: searchCondition },
-      { body: searchCondition },
-      { artist: { name: searchCondition } },
-    ],
+    OR: [{ title: searchCondition }, { artist: { name: searchCondition } }],
   };
 
   const lyrics = await prisma.lyrics.findMany({

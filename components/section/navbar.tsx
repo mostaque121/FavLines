@@ -30,7 +30,7 @@ export default function Navbar() {
 
           <div className="flex items-center space-x-2 md:space-x-4">
             <Link
-              href="/lyric/page/1"
+              href="/lyrics/page/1"
               className={`text-sm font-medium transition-colors hover:text-primary ${
                 pathname.startsWith("/lyrics")
                   ? "text-primary underline underline-offset-4"
@@ -40,7 +40,7 @@ export default function Navbar() {
               Lyrics
             </Link>
             <Link
-              href="/poem/page/1"
+              href="/poems/page/1"
               className={`text-sm font-medium transition-colors hover:text-primary ${
                 pathname.startsWith("/poems")
                   ? "text-primary underline underline-offset-4"
@@ -69,7 +69,7 @@ export default function Navbar() {
 
       {isSearchOpen && (
         <div className="absolute top-full left-0 right-0 z-50 bg-background border-b shadow-lg">
-          <SearchBar />
+          <SearchBar closeSearchBar={() => setIsSearchOpen(false)} />
         </div>
       )}
     </div>

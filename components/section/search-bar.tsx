@@ -5,6 +5,7 @@ import { searchPoems } from "@/app/action/poem";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useDebounce } from "@/hooks/use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import { Music, PenTool } from "lucide-react";
 import Link from "next/link";
@@ -28,17 +29,18 @@ export default function SearchBar() {
   const [searchType, setSearchType] = useState<SearchType>("lyrics");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
   const { data: searchResults = [], isFetching } = useQuery<
     LyricsSearchResult[] | PoemSearchResult[]
   >({
-    queryKey: ["search", searchType, searchQuery],
+    queryKey: ["search", searchType, debouncedSearchQuery],
     queryFn: async () => {
       if (!searchQuery.trim()) return [];
       return searchType === "lyrics"
-        ? await searchLyrics(searchQuery)
-        : await searchPoems(searchQuery);
+        ? await searchLyrics(debouncedSearchQuery)
+        : await searchPoems(debouncedSearchQuery);
     },
-    enabled: !!searchQuery.trim(),
+    enabled: !!debouncedSearchQuery.trim(),
   });
 
   return (
@@ -85,8 +87,8 @@ export default function SearchBar() {
             <Link
               href={
                 searchType === "lyrics"
-                  ? `/lyrics/${result.slug}`
-                  : `/poems/${result.slug}`
+                  ? `/lyric/${result.slug}`
+                  : `/poem/${result.slug}`
               }
               prefetch={false}
               key={result.id}

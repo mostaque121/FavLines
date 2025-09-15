@@ -15,8 +15,8 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <div className="relative container mx-auto px-4 md:px-8">
-      <nav className="w-full border-b bg-background">
+    <div className="relative ">
+      <nav className="w-full container mx-auto px-4 md:px-8 border-b bg-background">
         <div className="flex h-16 items-center justify-between">
           <Link href={"/"}>
             <Image

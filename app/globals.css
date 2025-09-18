@@ -147,3 +147,13 @@
 .ql-editor {
   min-height: 200px; /* ensures text area itself has min height */
 }
+
+.c-card {
+  box-shadow: 0 8px 24px 0 rgba(1, 194, 122, 0.1), 0 0 0 3px #fff inset;
+}
+.c-card:hover {
+  box-shadow: 0 8px 24px 0 rgba(51, 194, 122, 0.1),
+    0 0 0 1px rgb(51, 194, 122) inset;
+  scale: 1.02;
+  transition: 0.3s ease all;
+}

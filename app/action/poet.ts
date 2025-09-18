@@ -2,7 +2,7 @@
 import { checkAccess } from "@/lib/check-access";
 import { prisma } from "@/lib/prisma";
 import { poetSchema } from "@/lib/zod";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import z from "zod";
 
 type poetFormValues = z.infer<typeof poetSchema>;
@@ -45,10 +45,11 @@ export async function updatePoet(id: string, data: poetFormValues) {
 
   const newData = parsed.data;
   try {
-    await prisma.poet.update({
+    const poetToUpdate = await prisma.poet.update({
       where: { id },
       data: newData,
     });
+    revalidatePath(`/author/${poetToUpdate.slug}`);
     revalidateTag("all_poets");
     return { success: true };
   } catch (error) {
@@ -76,6 +77,7 @@ export async function deletePoet(id: string) {
     await prisma.poet.delete({
       where: { id },
     });
+    revalidatePath(`/author/${poetToDelete.slug}`);
     revalidateTag("all_poets");
     return { success: true };
   } catch (error) {
@@ -90,7 +92,9 @@ export const getAllPoets = unstable_cache(
   async () => {
     return prisma.poet.findMany({
       orderBy: {
-        name: "asc",
+        poems: {
+          _count: "desc", // or 'asc' if you want ascending order
+        },
       },
     });
   },
@@ -99,6 +103,7 @@ export const getAllPoets = unstable_cache(
     tags: ["all_poets"],
   }
 );
+
 export const getRandomSuggestedPoets = unstable_cache(
   async (limit = 6) => {
     const allPoets = await prisma.poet.findMany({
@@ -119,3 +124,54 @@ export const getRandomSuggestedPoets = unstable_cache(
     tags: ["all_poets", "random_suggested_poets"],
   }
 );
+
+export const getAllPoetsForPage = unstable_cache(
+  async () => {
+    return prisma.poet.findMany({
+      orderBy: {
+        poems: {
+          _count: "desc",
+        },
+      },
+      include: {
+        _count: {
+          select: { poems: true },
+        },
+      },
+    });
+  },
+  ["all_poets"],
+  {
+    tags: ["all_poets"],
+  }
+);
+
+export async function getPoetBySLug(slug: string) {
+  return prisma.poet.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      name: true,
+      imageUrl: true,
+      slug: true,
+      _count: {
+        select: { poems: true },
+      },
+      poems: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          favourite: true,
+          imageUrl: true,
+          slug: true,
+          poet: {
+            select: { name: true, slug: true },
+          },
+        },
+      },
+    },
+  });
+}

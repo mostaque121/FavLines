@@ -1,6 +1,6 @@
 "use client";
 
-import { getSuggestedPoemsParallel } from "@/app/action/suggestion";
+import { getSuggestedPoemsFlexible } from "@/app/action/suggestion";
 import { useQuery } from "@tanstack/react-query";
 import { PoemCardSmall } from "../card/poem-card";
 import CommonHeader from "../section/common-header";
@@ -28,7 +28,7 @@ interface SectionProps {
 export default function SuggestedPoem({ slug }: SectionProps) {
   const { data = [], isLoading } = useQuery<SuggestedPoemType[]>({
     queryKey: ["suggested_poem", slug],
-    queryFn: () => getSuggestedPoemsParallel(slug),
+    queryFn: () => getSuggestedPoemsFlexible(slug),
     staleTime: 1000 * 60 * 5, // 5 minutes cache
   });
 
@@ -37,13 +37,13 @@ export default function SuggestedPoem({ slug }: SectionProps) {
       <CommonHeader subHeading="Suggested Poems" href="/poems/page/1" />
 
       {isLoading ? (
-        <div className="space-y-4">
-          {Array.from({ length: 6 }).map((_, i) => (
+        <div className="space-y-2">
+          {Array.from({ length: 10 }).map((_, i) => (
             <PoemSmallCardSkeleton key={i} />
           ))}
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-2">
           {data.map((poem) => (
             <PoemCardSmall
               key={poem.id}

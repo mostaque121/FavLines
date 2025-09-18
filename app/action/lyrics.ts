@@ -20,9 +20,17 @@ export async function addLyrics(data: lyricsFormValues) {
   const parsedData = parsed.data;
 
   try {
-    await prisma.lyrics.create({
+    const createdLyrics = await prisma.lyrics.create({
       data: parsedData,
+      select: {
+        slug: true,
+        artist: {
+          select: { slug: true },
+        },
+      },
     });
+    revalidatePath("/artists");
+    revalidatePath(`/artist/${createdLyrics.artist.slug}`);
     revalidateTag("latest_lyrics");
     revalidateTag("favourite_lyrics");
     revalidateTag("popular_lyrics_tags");
@@ -51,6 +59,12 @@ export async function updateLyrics(id: string, data: lyricsFormValues) {
 
   const lyricsToUpdate = await prisma.lyrics.findUnique({
     where: { id },
+    select: {
+      slug: true,
+      artist: {
+        select: { slug: true },
+      },
+    },
   });
 
   if (!lyricsToUpdate) {
@@ -67,6 +81,8 @@ export async function updateLyrics(id: string, data: lyricsFormValues) {
     });
 
     revalidatePath(`/lyric/${lyricsToUpdate.slug}`);
+    revalidatePath("/artists");
+    revalidatePath(`/artist/${lyricsToUpdate.artist.slug}`);
     revalidateTag("latest_lyrics");
     revalidateTag("favourite_lyrics");
     revalidateTag("popular_lyrics_tags");
@@ -80,11 +96,18 @@ export async function updateLyrics(id: string, data: lyricsFormValues) {
     };
   }
 }
+
 export async function updateLyricsFavourite(id: string, favourite: boolean) {
   await checkAccess();
   try {
     const lyricsToUpdate = await prisma.lyrics.findUnique({
       where: { id },
+      select: {
+        slug: true,
+        artist: {
+          select: { slug: true },
+        },
+      },
     });
 
     if (!lyricsToUpdate) {
@@ -99,6 +122,7 @@ export async function updateLyricsFavourite(id: string, favourite: boolean) {
     });
 
     revalidatePath(`/lyric/${lyricsToUpdate.slug}`);
+    revalidatePath(`/artist/${lyricsToUpdate.artist.slug}`);
     revalidateTag("latest_lyrics");
     revalidateTag("favourite_lyrics");
     revalidateTag("popular_lyrics_tags");
@@ -119,6 +143,12 @@ export async function deleteLyrics(id: string) {
   try {
     const lyricsToDelete = await prisma.lyrics.findUnique({
       where: { id },
+      select: {
+        slug: true,
+        artist: {
+          select: { slug: true },
+        },
+      },
     });
 
     if (!lyricsToDelete) {
@@ -132,6 +162,8 @@ export async function deleteLyrics(id: string) {
     });
 
     revalidatePath(`/lyric/${lyricsToDelete.slug}`);
+    revalidatePath("/artists");
+    revalidatePath(`/artist/${lyricsToDelete.artist.slug}`);
     revalidateTag("latest_lyrics");
     revalidateTag("favourite_lyrics");
     revalidateTag("popular_lyrics_tags");
@@ -245,6 +277,7 @@ export const getLyricsMeta = unstable_cache(
     tags: ["lyrics_meta"],
   }
 );
+
 export const getLyricsByPage = unstable_cache(
   async (page: number) => {
     const perPage = 30;

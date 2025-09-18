@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/lib/prisma";
 
+// --- Types ---
 type SuggestedPoem = {
   id: string;
   slug: string;
@@ -13,6 +14,7 @@ type SuggestedPoem = {
     slug: string;
   };
 };
+
 type SuggestedLyrics = {
   id: string;
   slug: string;
@@ -31,7 +33,33 @@ type SuggestedLyrics = {
   };
 };
 
-export async function getSuggestedPoemsParallel(
+// --- Shuffle helper ---
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
+// --- Pick unique items with dynamic quota ---
+function pickFlexible<T extends { id: string }>(
+  arr: T[],
+  seen: Set<string>,
+  suggestions: T[],
+  maxToPick: number
+) {
+  for (const item of shuffleArray(arr)) {
+    if (!seen.has(item.id) && suggestions.length < maxToPick) {
+      seen.add(item.id);
+      suggestions.push(item);
+    }
+    if (suggestions.length >= maxToPick) break;
+  }
+}
+
+// --- Suggested Poems ---
+export async function getSuggestedPoemsFlexible(
   slug: string
 ): Promise<SuggestedPoem[]> {
   const poem = await prisma.poem.findUnique({
@@ -40,11 +68,10 @@ export async function getSuggestedPoemsParallel(
   });
   if (!poem) return [];
 
-  const seen = new Set<string>();
-  seen.add(poem.id);
+  const seen = new Set<string>([poem.id]);
+  const suggestions: SuggestedPoem[] = [];
 
-  // parallel queries
-  const [tagBased, samePoet, favourite, randoms] = await Promise.all([
+  const [tagBased, samePoet, favourites, randoms] = await Promise.all([
     prisma.poem.findMany({
       where: { id: { not: poem.id }, tags: { hasSome: poem.tags } },
       take: 10,
@@ -95,27 +122,25 @@ export async function getSuggestedPoemsParallel(
     }),
   ]);
 
-  const suggestions: SuggestedPoem[] = [];
+  const quotas = [3, 3, 2, 10]; // tag, same poet, favourite, random
+  const categories = [tagBased, samePoet, favourites, randoms];
 
-  function pickFromArray(arr: SuggestedPoem[], max: number) {
-    shuffleArray(arr).some((p) => {
-      if (!seen.has(p.id) && suggestions.length < max) {
-        seen.add(p.id);
-        suggestions.push(p);
-      }
-      return suggestions.length >= max;
-    });
+  for (let i = 0; i < categories.length; i++) {
+    const remaining = 10 - suggestions.length;
+    if (remaining <= 0) break;
+    pickFlexible(
+      categories[i],
+      seen,
+      suggestions,
+      Math.min(quotas[i], remaining)
+    );
   }
-
-  pickFromArray(tagBased, 3); // tag based
-  pickFromArray(samePoet, 5); // same poet
-  pickFromArray(favourite, 6); // favourite
-  pickFromArray(randoms, 6); // fill remaining
 
   return suggestions;
 }
 
-export async function getSuggestedLyricsParallel(
+// --- Suggested Lyrics ---
+export async function getSuggestedLyricsFlexible(
   slug: string
 ): Promise<SuggestedLyrics[]> {
   const lyrics = await prisma.lyrics.findUnique({
@@ -124,11 +149,10 @@ export async function getSuggestedLyricsParallel(
   });
   if (!lyrics) return [];
 
-  const seen = new Set<string>();
-  seen.add(lyrics.id);
+  const seen = new Set<string>([lyrics.id]);
+  const suggestions: SuggestedLyrics[] = [];
 
-  // parallel queries
-  const [tagBased, samePoet, favourite, randoms] = await Promise.all([
+  const [tagBased, sameArtist, favourites, randoms] = await Promise.all([
     prisma.lyrics.findMany({
       where: { id: { not: lyrics.id }, tags: { hasSome: lyrics.tags } },
       take: 10,
@@ -183,31 +207,19 @@ export async function getSuggestedLyricsParallel(
     }),
   ]);
 
-  const suggestions: SuggestedLyrics[] = [];
+  const quotas = [3, 3, 2, 10]; // tag, same artist, favourite, random
+  const categories = [tagBased, sameArtist, favourites, randoms];
 
-  function pickFromArray(arr: SuggestedLyrics[], max: number) {
-    shuffleArray(arr).some((p) => {
-      if (!seen.has(p.id) && suggestions.length < max) {
-        seen.add(p.id);
-        suggestions.push(p);
-      }
-      return suggestions.length >= max;
-    });
+  for (let i = 0; i < categories.length; i++) {
+    const remaining = 10 - suggestions.length;
+    if (remaining <= 0) break;
+    pickFlexible(
+      categories[i],
+      seen,
+      suggestions,
+      Math.min(quotas[i], remaining)
+    );
   }
-
-  pickFromArray(tagBased, 3); // tag based
-  pickFromArray(samePoet, 5); // same poet
-  pickFromArray(favourite, 6); // favourite
-  pickFromArray(randoms, 6); // fill remaining
 
   return suggestions;
-}
-
-// shuffle helper
-function shuffleArray<T>(array: T[]): T[] {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
 }

@@ -20,10 +20,17 @@ export async function addPoem(data: poemFormValues) {
   const parsedData = parsed.data;
 
   try {
-    await prisma.poem.create({
+    const createdPoem = await prisma.poem.create({
       data: parsedData,
+      select: {
+        slug: true,
+        poet: {
+          select: { slug: true },
+        },
+      },
     });
-
+    revalidatePath("/authors");
+    revalidatePath(`/artist/${createdPoem.poet.slug}`);
     revalidateTag("latest_poems");
     revalidateTag("favourite_poems");
     revalidateTag("popular_poem_tags");
@@ -52,6 +59,14 @@ export async function updatePoem(id: string, data: poemFormValues) {
 
   const PoemToUpdate = await prisma.poem.findUnique({
     where: { id },
+    select: {
+      slug: true,
+      poet: {
+        select: {
+          slug: true,
+        },
+      },
+    },
   });
 
   if (!PoemToUpdate) {
@@ -68,6 +83,8 @@ export async function updatePoem(id: string, data: poemFormValues) {
     });
 
     revalidatePath(`/poem/${PoemToUpdate.slug}`);
+    revalidatePath("/authors");
+    revalidatePath(`/author/${PoemToUpdate.poet.slug}`);
     revalidateTag("latest_poems");
     revalidateTag("favourite_poems");
     revalidateTag("popular_poem_tags");
@@ -82,11 +99,20 @@ export async function updatePoem(id: string, data: poemFormValues) {
     };
   }
 }
+
 export async function updatePoemFavourite(id: string, favourite: boolean) {
   await checkAccess();
   try {
     const PoemToUpdate = await prisma.poem.findUnique({
       where: { id },
+      select: {
+        slug: true,
+        poet: {
+          select: {
+            slug: true,
+          },
+        },
+      },
     });
 
     if (!PoemToUpdate) {
@@ -101,6 +127,7 @@ export async function updatePoemFavourite(id: string, favourite: boolean) {
     });
 
     revalidatePath(`/poem/${PoemToUpdate.slug}`);
+    revalidatePath(`/author/${PoemToUpdate.poet.slug}`);
     revalidateTag("latest_poems");
     revalidateTag("favourite_poems");
     revalidateTag("popular_poem_tags");
@@ -122,6 +149,14 @@ export async function deletePoem(id: string) {
   try {
     const poemToDelete = await prisma.poem.findUnique({
       where: { id },
+      select: {
+        slug: true,
+        poet: {
+          select: {
+            slug: true,
+          },
+        },
+      },
     });
 
     if (!poemToDelete) {
@@ -135,6 +170,8 @@ export async function deletePoem(id: string) {
     });
 
     revalidatePath(`/poem/${poemToDelete.slug}`);
+    revalidatePath("/authors");
+    revalidatePath(`/author/${poemToDelete.poet.slug}`);
     revalidateTag("latest_poems");
     revalidateTag("favourite_poems");
     revalidateTag("popular_poem_tags");
@@ -234,6 +271,7 @@ export const getPoemsMeta = unstable_cache(
     tags: ["poems_meta"],
   }
 );
+
 export const getPoemsByPage = unstable_cache(
   async (page: number) => {
     const perPage = 30;
@@ -269,6 +307,7 @@ export interface PoemSearchResult {
   slug: string;
   poet: { name: string };
 }
+
 export async function searchPoems(query: string): Promise<PoemSearchResult[]> {
   if (!query.trim()) return [];
 

@@ -18,8 +18,8 @@ export default function CommonHeader({
   if (!title && !href) return null; // nothing to show
 
   return (
-    <div className="bg-gray-700 flex items-center justify-between flex-wrap gap-3 py-2 px-4 mb-4">
-      {title && <h1 className="text-white text-lg font-semibold">{title}</h1>}
+    <div className="bg-gray-700 text-sm flex items-center justify-between flex-wrap gap-3 py-1.5 rounded-md px-4 mb-4">
+      {title && <h1 className="text-white font-semibold">{title}</h1>}
 
       {href && (
         <Link

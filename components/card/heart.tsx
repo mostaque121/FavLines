@@ -30,7 +30,6 @@ export default function Favourite({
         `}
       >
         <Heart
-          onClick={onSubmit}
           className={` ${
             variant === "big" ? "h-5 w-5" : "w-4 h-4 mt-1 "
           }  transition-all duration-200

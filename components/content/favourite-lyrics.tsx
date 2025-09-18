@@ -9,7 +9,7 @@ export default async function FavouriteLyrics() {
     <section className="space-y-6">
       <CommonHeader subHeading="Favourite Lyrics" href="/favourite/lyrics" />
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {favouriteLyrics.map((lyric) => (
           <LyricsCardSmall
             key={lyric.id}

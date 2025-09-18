@@ -38,9 +38,11 @@ export default function SearchBar({ closeSearchBar }: SectionProps) {
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  const { data: searchResults = [], isFetching } = useQuery<
-    LyricsSearchResult[] | PoemSearchResult[]
-  >({
+  const {
+    data: searchResults = [],
+    isFetching,
+    isLoading,
+  } = useQuery<LyricsSearchResult[] | PoemSearchResult[]>({
     queryKey: ["search", searchType, debouncedSearchQuery],
     queryFn: async () => {
       if (!searchQuery.trim()) return [];
@@ -49,6 +51,7 @@ export default function SearchBar({ closeSearchBar }: SectionProps) {
         : await searchPoems(debouncedSearchQuery);
     },
     enabled: !!debouncedSearchQuery.trim(),
+    placeholderData: (previousData) => previousData,
   });
 
   const handleClickOutside = useCallback(
@@ -114,7 +117,7 @@ export default function SearchBar({ closeSearchBar }: SectionProps) {
         autoFocus
       />
 
-      {isFetching && (
+      {isLoading && (
         <p className="text-sm text-center py-5 text-muted-foreground">
           Searching...
         </p>
@@ -160,11 +163,14 @@ export default function SearchBar({ closeSearchBar }: SectionProps) {
       )}
 
       {/* No results */}
-      {searchQuery && !isFetching && searchResults.length === 0 && (
-        <p className="text-center text-muted-foreground py-4">
-          No {searchType} found for &quot;{searchQuery}&quot;
-        </p>
-      )}
+      {searchQuery &&
+        !isFetching && // only after fetch finishes
+        debouncedSearchQuery && // ensures debounce has triggered
+        searchResults.length === 0 && (
+          <p className="text-center text-muted-foreground py-4">
+            No {searchType} found for &quot;{searchQuery}&quot;
+          </p>
+        )}
     </div>
   );
 }

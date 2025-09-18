@@ -38,3 +38,50 @@ export function PoetCard({ name, image, slug }: PoetCardProps) {
     </Link>
   );
 }
+
+interface AuthorCardProps {
+  name: string;
+  image: string | null;
+  slug: string;
+  poemCount?: number; // new prop
+}
+
+export function AuthorCard({
+  name,
+  image,
+  slug,
+  poemCount = 0,
+}: AuthorCardProps) {
+  return (
+    <Link
+      href={`/author/${slug}`}
+      className="group relative overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 cursor-pointer"
+      prefetch={false}
+    >
+      {/* Square container for the image */}
+      <div className="aspect-square relative w-full">
+        {image ? (
+          <Image
+            src={image}
+            alt={name}
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 33vw"
+          />
+        ) : (
+          <div className="bg-gray-300 w-full h-full flex items-center justify-center">
+            <span className="text-gray-600">No Image</span>
+          </div>
+        )}
+
+        {/* Bottom overlay with gradient background */}
+        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4">
+          <h3 className="text-white font-semibold text-sm truncate">{name}</h3>
+          <p className="text-gray-200 text-xs mt-1">
+            {poemCount} {poemCount === 1 ? "Poem" : "Poems"}
+          </p>
+        </div>
+      </div>
+    </Link>
+  );
+}

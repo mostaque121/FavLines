@@ -2,7 +2,7 @@
 import { checkAccess } from "@/lib/check-access";
 import { prisma } from "@/lib/prisma";
 import { artistSchema } from "@/lib/zod";
-import { revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import z from "zod";
 
 type artistFormValues = z.infer<typeof artistSchema>;
@@ -45,10 +45,11 @@ export async function updateArtist(id: string, data: artistFormValues) {
 
   const newData = parsed.data;
   try {
-    await prisma.artist.update({
+    const artistToUpdate = await prisma.artist.update({
       where: { id },
       data: newData,
     });
+    revalidatePath(`/artist/${artistToUpdate.slug}`);
     revalidateTag("all_artists");
     return { success: true };
   } catch (error) {
@@ -59,7 +60,7 @@ export async function updateArtist(id: string, data: artistFormValues) {
   }
 }
 
-export async function deleteAlbum(id: string) {
+export async function deleteArtist(id: string) {
   await checkAccess();
 
   try {
@@ -76,6 +77,7 @@ export async function deleteAlbum(id: string) {
     await prisma.artist.delete({
       where: { id },
     });
+    revalidatePath(`/artist/${artistToDelete.slug}`);
     revalidateTag("all_artists");
     return { success: true };
   } catch (error) {
@@ -120,3 +122,57 @@ export const getRandomSuggestedArtists = unstable_cache(
     tags: ["all_artists", "random_suggested_artists"],
   }
 );
+
+export const getAllArtistsForPage = unstable_cache(
+  async () => {
+    return prisma.artist.findMany({
+      orderBy: {
+        lyrics: {
+          _count: "desc",
+        },
+      },
+      include: {
+        _count: {
+          select: { lyrics: true },
+        },
+      },
+    });
+  },
+  ["all_artists"],
+  {
+    tags: ["all_artists"],
+  }
+);
+
+export async function getArtistBySLug(slug: string) {
+  return prisma.artist.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      name: true,
+      imageUrl: true,
+      slug: true,
+      _count: {
+        select: { lyrics: true },
+      },
+      lyrics: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          id: true,
+          title: true,
+          favourite: true,
+          imageUrl: true,
+          slug: true,
+          artist: {
+            select: { name: true, slug: true },
+          },
+          album: {
+            select: { name: true, slug: true },
+          },
+        },
+      },
+    },
+  });
+}

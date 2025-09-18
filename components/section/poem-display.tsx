@@ -5,7 +5,6 @@ import Image from "next/image";
 import "react-quill-new/dist/quill.snow.css";
 import { PoemAction } from "../admin-action/action-menu";
 import Favourite from "../card/heart";
-import FavouritePoems from "../content/favourite-poems";
 import PopularPoemTags from "../content/popular-poem-tags";
 import SuggestedPoem from "../content/suggested-poems";
 import SuggestedPoets from "../content/suggested-poet";
@@ -134,7 +133,6 @@ export function PoemDisplay({ poem, slug }: PoemDisplayProps) {
         {/* Sidebar - Suggested Poems */}
         <aside className="w-full space-y-8">
           <SuggestedPoem slug={slug} />
-          <FavouritePoems />
           <SuggestedPoets />
           <PopularPoemTags />
         </aside>

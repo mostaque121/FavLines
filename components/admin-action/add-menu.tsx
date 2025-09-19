@@ -10,7 +10,6 @@ import { Plus } from "lucide-react";
 import { AddBtn } from "../ui/add-btn";
 
 import { useSession } from "next-auth/react";
-import AlbumForm from "../form/album-form";
 import ArtistForm from "../form/artist-form";
 import LyricsForm from "../form/lyrics-form";
 import PoemForm from "../form/poem-form";
@@ -30,7 +29,6 @@ export default function AddMenuPopover() {
 
       <PopoverContent className=" p-2">
         <div className="flex flex-col gap-2">
-          <AddBtn title="Add Album" FormComponent={AlbumForm} />
           <AddBtn title="Add Artist" FormComponent={ArtistForm} />
           <AddBtn title="Add Lyrics" FormComponent={LyricsForm} />
           <AddBtn title="Add Poem" FormComponent={PoemForm} />

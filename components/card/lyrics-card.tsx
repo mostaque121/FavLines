@@ -9,15 +9,10 @@ interface Artist {
   name: string;
   slug: string;
 }
-interface Album {
-  name: string;
-  slug: string;
-}
 
 type LyricsCardProps = {
   title: string;
   artist: Artist;
-  album: Album;
   imageUrl: string;
   favourite: boolean;
   id: string;
@@ -27,7 +22,6 @@ type LyricsCardProps = {
 export function LyricsCard({
   title,
   artist,
-  album,
   imageUrl,
   favourite,
   id,
@@ -59,7 +53,6 @@ export function LyricsCard({
         <div className="flex justify-between items-start gap-2 mt-1">
           <div className="flex flex-wrap items-center  text-sm text-gray-600 dark:text-gray-300">
             <span className="mr-2">{artist.name}</span>
-            <span>{album.name}</span>
           </div>
 
           {/* Heart icon */}
@@ -74,7 +67,6 @@ export function LyricsCardSmall({
   title,
   imageUrl,
   artist,
-  album,
   id,
   favourite,
   slug,
@@ -102,10 +94,13 @@ export function LyricsCardSmall({
           </h3>
 
           <div className="flex w-full justify-between items-start gap-2 mt-1">
-            <div className="flex flex-wrap items-center text-sm text-gray-600 dark:text-gray-300">
+            <Link
+              href={`/artist/${artist.slug}`}
+              prefetch={false}
+              className="flex flex-wrap items-center text-sm text-gray-600 hover:text-primary duration-200 transition-colors dark:text-gray-300"
+            >
               <span className="mr-2 line-clamp-1">{artist.name}</span>
-              <span className="line-clamp-1">{album.name}</span>
-            </div>
+            </Link>
           </div>
         </div>
       </Link>

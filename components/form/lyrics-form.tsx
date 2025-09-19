@@ -41,14 +41,13 @@ interface LyricsFormProps {
 
 export default function LyricsForm({ onCloseForm, item }: LyricsFormProps) {
   const isEditMode = !!item;
-  const { tags, artists, albums } = useData();
+  const { tags, artists } = useData();
 
   const defaultValues: Partial<lyricsFormValues> = {
     title: item?.title || "",
     slug: item?.slug || "",
     imageUrl: item?.imageUrl || "",
     artistId: item?.artistId || "",
-    albumId: item?.albumId || "",
     body: item?.body || "",
     tags: item?.tags || [],
     favourite: item?.favourite || false,
@@ -165,26 +164,6 @@ export default function LyricsForm({ onCloseForm, item }: LyricsFormProps) {
                       onChange={field.onChange}
                       options={artists}
                       placeholder="Select an Artist"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/*  Album */}
-            <FormField
-              control={form.control}
-              name="albumId"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Album</FormLabel>
-                  <FormControl>
-                    <SingleSelect
-                      value={field.value}
-                      onChange={field.onChange}
-                      options={albums}
-                      placeholder="Select an Album"
                     />
                   </FormControl>
                   <FormMessage />

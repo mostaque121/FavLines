@@ -16,7 +16,6 @@ export default async function FavouriteLyrics() {
             title={lyric.title}
             imageUrl={lyric.imageUrl}
             artist={lyric.artist}
-            album={lyric.album}
             id={lyric.id}
             favourite={lyric.favourite}
             slug={lyric.slug}

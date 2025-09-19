@@ -5,7 +5,6 @@ import { Pager } from "../ui/pager";
 type Lyrics = {
   title: string;
   artist: Artist;
-  album: Album;
   imageUrl: string;
   favourite: boolean;
   id: string;
@@ -15,10 +14,7 @@ interface Artist {
   name: string;
   slug: string;
 }
-interface Album {
-  name: string;
-  slug: string;
-}
+
 interface SectionProps {
   lyrics: Lyrics[];
   page: number;
@@ -27,10 +23,7 @@ interface SectionProps {
 export default function AllLyrics({ lyrics, page, totalPages }: SectionProps) {
   return (
     <section>
-      {/* Page Title */}
       <CommonHeader heading="Lyrics Collection" />
-
-      {/* Lyrics Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {lyrics.map((lyric) => (
           <LyricsCard
@@ -38,7 +31,6 @@ export default function AllLyrics({ lyrics, page, totalPages }: SectionProps) {
             id={lyric.id}
             title={lyric.title}
             artist={lyric.artist}
-            album={lyric.album}
             slug={lyric.slug}
             favourite={lyric.favourite}
             key={lyric.id}

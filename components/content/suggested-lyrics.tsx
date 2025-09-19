@@ -11,11 +11,6 @@ interface Artist {
   name: string;
   slug: string;
 }
-interface Album {
-  id: string;
-  name: string;
-  slug: string;
-}
 
 interface SuggestedLyricsType {
   id: string;
@@ -24,7 +19,6 @@ interface SuggestedLyricsType {
   imageUrl: string;
   favourite: boolean;
   artist: Artist;
-  album: Album;
 }
 
 interface SectionProps {
@@ -58,7 +52,6 @@ export default function SuggestedLyrics({ slug }: SectionProps) {
               imageUrl={lyric.imageUrl}
               favourite={lyric.favourite}
               artist={lyric.artist}
-              album={lyric.album}
             />
           ))}
         </div>

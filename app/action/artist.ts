@@ -168,9 +168,6 @@ export async function getArtistBySLug(slug: string) {
           artist: {
             select: { name: true, slug: true },
           },
-          album: {
-            select: { name: true, slug: true },
-          },
         },
       },
     },

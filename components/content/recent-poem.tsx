@@ -1,6 +1,8 @@
 import { getLatestPoems } from "@/app/action/poem";
+import Link from "next/link";
 import { PoemCard } from "../card/poem-card";
 import CommonHeader from "../section/common-header";
+import { Button } from "../ui/button";
 
 export default async function RecentPoems() {
   const latestPoems = await getLatestPoems();
@@ -21,6 +23,14 @@ export default async function RecentPoems() {
           />
         ))}
       </div>
+
+      <Link
+        className="flex items-center justify-center"
+        href={"/poems/page/1"}
+        prefetch={false}
+      >
+        <Button className="cursor-pointer">View All</Button>
+      </Link>
     </section>
   );
 }

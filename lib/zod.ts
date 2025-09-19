@@ -26,21 +26,6 @@ export const artistSchema = z.object({
     ),
   imageUrl: z.string().nonempty("image is required"),
 });
-export const albumSchema = z.object({
-  name: z
-    .string()
-    .nonempty("Name is required")
-    .min(2, "Name must be more than 2 characters"),
-  slug: z
-    .string()
-    .nonempty("Slug is required")
-    .min(2, "Slug must be more than 2 characters")
-    .regex(
-      /^[a-z0-9\u0980-\u09FF-]+$/,
-      "Slug can only contain lowercase letters, numbers, and hyphens"
-    ),
-  imageUrl: z.string().nonempty("image is required"),
-});
 export const poetSchema = z.object({
   name: z
     .string()
@@ -85,7 +70,6 @@ export const lyricsSchema = z.object({
     ),
   imageUrl: z.string().nonempty("image is required"),
   artistId: z.string().nonempty("Artist is required"),
-  albumId: z.string().nonempty("Artist is required"),
   body: z
     .string()
     .nonempty("Content is required")

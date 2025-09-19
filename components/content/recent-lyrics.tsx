@@ -1,6 +1,8 @@
 import { getLatestLyrics } from "@/app/action/lyrics";
+import Link from "next/link";
 import { LyricsCard } from "../card/lyrics-card";
 import CommonHeader from "../section/common-header";
+import { Button } from "../ui/button";
 
 export default async function RecentLyrics() {
   const latestLyrics = await getLatestLyrics();
@@ -14,7 +16,6 @@ export default async function RecentLyrics() {
             key={lyric.id}
             title={lyric.title}
             artist={lyric.artist}
-            album={lyric.album}
             imageUrl={lyric.imageUrl}
             id={lyric.id}
             favourite={lyric.favourite}
@@ -22,6 +23,13 @@ export default async function RecentLyrics() {
           />
         ))}
       </div>
+      <Link
+        className="flex items-center justify-center"
+        href={"/lyrics/page/1"}
+        prefetch={false}
+      >
+        <Button className="cursor-pointer">View All</Button>
+      </Link>
     </section>
   );
 }

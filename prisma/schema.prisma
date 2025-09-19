@@ -17,14 +17,6 @@ model Artist {
   lyrics   Lyrics[]
 }
 
-model Album {
-  id    String @id @default(cuid())
-  slug      String   @unique
-  name     String
-  imageUrl String?
-
-  lyrics   Lyrics[]
-}
 
 model Poet {
   id    String @id @default(cuid())
@@ -48,9 +40,6 @@ model Lyrics {
 
   artistId  String
   artist    Artist   @relation(fields: [artistId], references: [id])
-  
-  albumId String 
-  album     Album   @relation(fields: [albumId], references: [id])
 
   tags      String[]
 

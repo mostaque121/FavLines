@@ -50,9 +50,13 @@ export function PoemCard({
         </Link>
 
         <div className="flex justify-between items-start gap-2 mt-1">
-          <div className="flex flex-wrap items-center  text-sm text-gray-600 dark:text-gray-300">
+          <Link
+            href={`/author/${poet.slug}`}
+            prefetch={false}
+            className="flex flex-wrap items-center  text-sm text-gray-600 hover:text-primary transition-colors duration-200 dark:text-gray-300"
+          >
             <span className="mr-2">{poet.name}</span>
-          </div>
+          </Link>
 
           {/* Heart icon */}
           <Favourite type="poem" id={id} favourite={favourite} />

@@ -191,9 +191,6 @@ export const getLatestLyrics = unstable_cache(
         artist: {
           select: { name: true, slug: true },
         },
-        album: {
-          select: { name: true, slug: true },
-        },
       },
       orderBy: {
         createdAt: "desc",
@@ -220,9 +217,6 @@ export const getFavouriteLyrics = unstable_cache(
         artist: {
           select: { name: true, slug: true },
         },
-        album: {
-          select: { name: true, slug: true },
-        },
       },
       orderBy: {
         createdAt: "desc",
@@ -241,13 +235,6 @@ export async function getLyricsBySLug(slug: string) {
     where: { slug },
     include: {
       artist: {
-        select: {
-          id: true,
-          name: true,
-          slug: true,
-        },
-      },
-      album: {
         select: {
           id: true,
           name: true,
@@ -291,9 +278,6 @@ export const getLyricsByPage = unstable_cache(
         imageUrl: true,
         slug: true,
         artist: {
-          select: { name: true, slug: true },
-        },
-        album: {
           select: { name: true, slug: true },
         },
       },

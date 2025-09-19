@@ -8,7 +8,6 @@ import { DataProvider } from "@/context/data-provider";
 import { QueryProvider } from "@/context/query-provider";
 import { SessionProvider } from "next-auth/react";
 import { Instrument_Serif } from "next/font/google";
-import { getAllAlbums } from "./action/album";
 import { getAllArtists } from "./action/artist";
 import { getAllPoets } from "./action/poet";
 import { getAllTags } from "./action/tag";
@@ -42,7 +41,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const artists = await getAllArtists();
-  const albums = await getAllAlbums();
   const poets = await getAllPoets();
   const tags = await getAllTags();
 
@@ -55,7 +53,6 @@ export default async function RootLayout({
           <QueryProvider>
             <DataProvider
               initialArtists={artists}
-              initialAlbums={albums}
               initialPoets={poets}
               initialTags={tags}
             >

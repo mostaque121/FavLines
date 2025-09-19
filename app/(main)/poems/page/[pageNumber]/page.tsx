@@ -46,8 +46,8 @@ export default async function PoemPage({ params }: PageProps) {
           <AllPoems page={page} totalPages={totalPages} poems={poems} />
         </div>
         <aside className="space-y-6">
-          <SuggestedPoets />
           <FavouritePoems />
+          <SuggestedPoets />
           <PopularPoemTags />
         </aside>
       </div>

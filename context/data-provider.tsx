@@ -7,11 +7,6 @@ interface Artist {
   name: string;
   slug: string;
 }
-interface Album {
-  id: string;
-  name: string;
-  slug: string;
-}
 interface Poet {
   id: string;
   name: string;
@@ -21,7 +16,6 @@ interface Poet {
 // Define the context type
 export interface DataContextType {
   tags: string[];
-  albums: Album[];
   artists: Artist[];
   poets: Poet[];
 }
@@ -33,20 +27,17 @@ const DataContext = createContext<DataContextType | undefined>(undefined);
 export function DataProvider({
   children,
   initialArtists,
-  initialAlbums,
   initialPoets,
   initialTags,
 }: {
   children: ReactNode;
   initialArtists: Artist[];
-  initialAlbums: Album[];
   initialPoets: Poet[];
   initialTags: string[];
 }) {
   // The value we'll provide to consumers
   const value: DataContextType = {
     artists: initialArtists,
-    albums: initialAlbums,
     poets: initialPoets,
     tags: initialTags,
   };

@@ -1,13 +1,11 @@
 // LyricsDropdownClient.tsx
 "use client";
 
-import { deleteAlbum } from "@/app/action/album";
 import { deleteArtist } from "@/app/action/artist";
 import { deleteLyrics } from "@/app/action/lyrics";
 import { deletePoem } from "@/app/action/poem";
 import { deletePoet } from "@/app/action/poet";
-import type { Album, Artist, Lyrics, Poem, Poet } from "@/generated/prisma";
-import AlbumForm from "../form/album-form";
+import type { Artist, Lyrics, Poem, Poet } from "@/generated/prisma";
 import ArtistForm from "../form/artist-form";
 import LyricsForm from "../form/lyrics-form";
 import PoemForm from "../form/poem-form";
@@ -62,18 +60,6 @@ export function ArtistAction({ artist }: { artist: Artist }) {
       EditForm={ArtistForm}
       onDelete={async (item) => {
         await deleteArtist(item.id);
-      }}
-    />
-  );
-}
-export function AlbumAction({ album }: { album: Album }) {
-  return (
-    <ItemActionDropdown
-      name="Album"
-      item={album}
-      EditForm={AlbumForm}
-      onDelete={async (item) => {
-        await deleteAlbum(item.id);
       }}
     />
   );

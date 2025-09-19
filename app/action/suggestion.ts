@@ -163,7 +163,6 @@ export async function getSuggestedLyricsFlexible(
         imageUrl: true,
         favourite: true,
         artist: { select: { id: true, name: true, slug: true } },
-        album: { select: { id: true, name: true, slug: true } },
       },
     }),
     prisma.lyrics.findMany({
@@ -176,7 +175,6 @@ export async function getSuggestedLyricsFlexible(
         imageUrl: true,
         favourite: true,
         artist: { select: { id: true, name: true, slug: true } },
-        album: { select: { id: true, name: true, slug: true } },
       },
     }),
     prisma.lyrics.findMany({
@@ -189,7 +187,6 @@ export async function getSuggestedLyricsFlexible(
         imageUrl: true,
         favourite: true,
         artist: { select: { id: true, name: true, slug: true } },
-        album: { select: { id: true, name: true, slug: true } },
       },
     }),
     prisma.lyrics.findMany({
@@ -202,7 +199,6 @@ export async function getSuggestedLyricsFlexible(
         imageUrl: true,
         favourite: true,
         artist: { select: { id: true, name: true, slug: true } },
-        album: { select: { id: true, name: true, slug: true } },
       },
     }),
   ]);

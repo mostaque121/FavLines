@@ -35,7 +35,6 @@ export default async function ArtistPage({ params }: PageProps) {
             key={lyric.id}
             title={lyric.title}
             artist={lyric.artist}
-            album={lyric.album}
             imageUrl={lyric.imageUrl}
             id={lyric.id}
             favourite={lyric.favourite}

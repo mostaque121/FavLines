@@ -8,15 +8,9 @@ import { LyricsAction } from "../admin-action/action-menu";
 import Favourite from "../card/heart";
 import FavouriteLyrics from "../content/favourite-lyrics";
 import PopularLyricsTags from "../content/popular-lyrics-tag";
-import SuggestedAlbums from "../content/suggested-albums";
 import SuggestedArtist from "../content/suggested-artist";
 import SuggestedLyrics from "../content/suggested-lyrics";
 
-interface Album {
-  id: string;
-  name: string;
-  slug: string;
-}
 interface Artist {
   id: string;
   name: string;
@@ -31,10 +25,8 @@ interface Lyrics {
   imageUrl: string;
   ytLink: string | null;
   favourite: boolean;
-  album: Album;
   artist: Artist;
   artistId: string;
-  albumId: string;
   tags: string[];
   createdAt: Date;
   updatedAt: Date;
@@ -149,7 +141,6 @@ export function LyricsDisplay({ lyrics, slug }: PoemDisplayProps) {
           <SuggestedLyrics slug={slug} />
           <FavouriteLyrics />
           <SuggestedArtist />
-          <SuggestedAlbums />
           <PopularLyricsTags />
         </aside>
       </div>

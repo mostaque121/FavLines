@@ -2,7 +2,6 @@ import { getLyricsByPage, getLyricsMeta } from "@/app/action/lyrics";
 import AllLyrics from "@/components/content/all-lyrics";
 import FavouriteLyrics from "@/components/content/favourite-lyrics";
 import PopularLyricsTags from "@/components/content/popular-lyrics-tag";
-import SuggestedAlbums from "@/components/content/suggested-albums";
 import SuggestedArtist from "@/components/content/suggested-artist";
 import { notFound } from "next/navigation";
 
@@ -47,9 +46,8 @@ export default async function LyricsPage({ params }: PageProps) {
           <AllLyrics page={page} totalPages={totalPages} lyrics={lyrics} />
         </div>
         <aside className="space-y-6">
-          <SuggestedArtist />
-          <SuggestedAlbums />
           <FavouriteLyrics />
+          <SuggestedArtist />
           <PopularLyricsTags />
         </aside>
       </div>

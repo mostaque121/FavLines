@@ -5,6 +5,7 @@ interface SectionProps {
   name: string;
   count: number;
   page: "lyrics" | "poems";
+  Action?: React.ReactNode;
 }
 
 export default function ContentHeader({
@@ -12,6 +13,7 @@ export default function ContentHeader({
   name,
   count,
   page,
+  Action,
 }: SectionProps) {
   return (
     <section className="flex p-4 rounded-md bg-gray-700 gap-4 md:gap-8">
@@ -34,9 +36,12 @@ export default function ContentHeader({
       </div>
 
       <div className="flex-1  md:text-left">
-        <h1 className="text-lg  md:text-5xl font-bold text-background  md:mb-4">
-          {name}
-        </h1>
+        <div className="flex items-center gap-4 justify-between md:mb-4">
+          <h1 className="text-lg  md:text-5xl font-bold text-background  ">
+            {name}
+          </h1>
+          {Action && <div>{Action}</div>} {/* 👈 render it */}
+        </div>
         <p className=" text-gray-200 font-medium">
           Total {page}:{" "}
           <span className="text-slate-200 font-semibold">{count}</span>

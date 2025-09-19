@@ -25,16 +25,16 @@ type poetFormValues = z.infer<typeof poetSchema>;
 
 interface PoetFormProps {
   onCloseForm: () => void;
-  poet?: Poet;
+  item?: Poet;
 }
 
-export default function PoetForm({ onCloseForm, poet }: PoetFormProps) {
-  const isEditMode = !!poet;
+export default function PoetForm({ onCloseForm, item }: PoetFormProps) {
+  const isEditMode = !!item;
 
   const defaultValues: Partial<poetFormValues> = {
-    name: poet?.name || "",
-    imageUrl: poet?.imageUrl || "",
-    slug: poet?.slug || "",
+    name: item?.name || "",
+    imageUrl: item?.imageUrl || "",
+    slug: item?.slug || "",
   };
 
   const form = useForm<poetFormValues>({
@@ -44,8 +44,8 @@ export default function PoetForm({ onCloseForm, poet }: PoetFormProps) {
 
   async function onSubmit(data: poetFormValues) {
     try {
-      if (poet) {
-        await updatePoet(poet.id, data);
+      if (item) {
+        await updatePoet(item.id, data);
         toast.success("poet Updated", {
           description: "poet has been Updated successfully.",
         });
@@ -101,7 +101,8 @@ export default function PoetForm({ onCloseForm, poet }: PoetFormProps) {
                   <FormLabel>Link</FormLabel>
                   <FormControl>
                     <SlugInput
-                      onGenerate={(slug: string) => form.setValue("slug", slug)}
+                      initialValue={field.value}
+                      onGenerate={field.onChange}
                       placeholder="Link"
                       {...field}
                     />

@@ -2,6 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { Calendar, User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import "react-quill-new/dist/quill.snow.css";
 import { LyricsAction } from "../admin-action/action-menu";
 import Favourite from "../card/heart";
@@ -56,15 +57,22 @@ export function LyricsDisplay({ lyrics, slug }: PoemDisplayProps) {
     <article className="py-16">
       {/* Header */}
       <header className="text-center mb-12 relative">
-        <h1 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
-          {lyrics.title} <LyricsAction lyrics={lyrics} />
-        </h1>
+        <div className="flex items-center gap-4 justify-center  mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold text-primary leading-tight">
+            {lyrics.title}
+          </h1>
+          <LyricsAction lyrics={lyrics} />
+        </div>
 
         <div className="flex flex-wrap justify-center items-center gap-4 text-muted-foreground mb-8">
-          <div className="flex items-center gap-2">
+          <Link
+            href={`/artist/${lyrics.artist.slug}`}
+            prefetch={false}
+            className="flex hover:text-primary text-muted-foreground transition-colors duration-200 items-center gap-2"
+          >
             <User className="h-4 w-4" />
             <span className="font-medium">{lyrics.artist.name}</span>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />

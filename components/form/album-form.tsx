@@ -25,16 +25,16 @@ type albumFormValues = z.infer<typeof albumSchema>;
 
 interface AlbumFormProps {
   onCloseForm: () => void;
-  album?: Album;
+  item?: Album;
 }
 
-export default function AlbumForm({ onCloseForm, album }: AlbumFormProps) {
-  const isEditMode = !!album;
+export default function AlbumForm({ onCloseForm, item }: AlbumFormProps) {
+  const isEditMode = !!item;
 
   const defaultValues: Partial<albumFormValues> = {
-    name: album?.name || "",
-    imageUrl: album?.imageUrl || "",
-    slug: album?.slug || "",
+    name: item?.name || "",
+    imageUrl: item?.imageUrl || "",
+    slug: item?.slug || "",
   };
 
   const form = useForm<albumFormValues>({
@@ -44,8 +44,8 @@ export default function AlbumForm({ onCloseForm, album }: AlbumFormProps) {
 
   async function onSubmit(data: albumFormValues) {
     try {
-      if (album) {
-        await updateAlbum(album.id, data);
+      if (item) {
+        await updateAlbum(item.id, data);
         toast.success("Album Updated", {
           description: "Album has been Updated successfully.",
         });

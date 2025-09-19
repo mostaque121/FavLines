@@ -1,4 +1,5 @@
 import { getAllPoets, getPoetBySLug } from "@/app/action/poet";
+import { PoetAction } from "@/components/admin-action/action-menu";
 import { PoemCard } from "@/components/card/poem-card";
 import ContentHeader from "@/components/section/content-header";
 import { notFound } from "next/navigation";
@@ -26,6 +27,7 @@ export default async function AuthorPage({ params }: PageProps) {
         image={data.imageUrl}
         count={data._count.poems}
         page="poems"
+        Action={<PoetAction poet={data} />}
       />
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {data.poems.map((poem) => (

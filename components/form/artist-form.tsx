@@ -24,16 +24,16 @@ type artistFormValues = z.infer<typeof artistSchema>;
 
 interface ArtistFormProps {
   onCloseForm: () => void;
-  artist?: Artist;
+  item?: Artist;
 }
 
-export default function ArtistForm({ onCloseForm, artist }: ArtistFormProps) {
-  const isEditMode = !!artist;
+export default function ArtistForm({ onCloseForm, item }: ArtistFormProps) {
+  const isEditMode = !!item;
 
   const defaultValues: Partial<artistFormValues> = {
-    name: artist?.name || "",
-    imageUrl: artist?.imageUrl || "",
-    slug: artist?.slug || "",
+    name: item?.name || "",
+    imageUrl: item?.imageUrl || "",
+    slug: item?.slug || "",
   };
 
   const form = useForm<artistFormValues>({
@@ -43,8 +43,8 @@ export default function ArtistForm({ onCloseForm, artist }: ArtistFormProps) {
 
   async function onSubmit(data: artistFormValues) {
     try {
-      if (artist) {
-        await updateArtist(artist.id, data);
+      if (item) {
+        await updateArtist(item.id, data);
         toast.success("Artist Updated", {
           description: "Artist has been Updated successfully.",
         });
@@ -100,7 +100,8 @@ export default function ArtistForm({ onCloseForm, artist }: ArtistFormProps) {
                   <FormLabel>Link</FormLabel>
                   <FormControl>
                     <SlugInput
-                      onGenerate={(slug: string) => form.setValue("slug", slug)}
+                      onGenerate={field.onChange}
+                      initialValue={field.value}
                       placeholder="Slug"
                       {...field}
                     />

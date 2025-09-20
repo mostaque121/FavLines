@@ -22,9 +22,7 @@ export function LyricsAction({ lyrics }: Props) {
       name="Lyrics"
       item={lyrics}
       EditForm={LyricsForm}
-      onDelete={async (item) => {
-        await deleteLyrics(item.id);
-      }}
+      onDelete={(item) => deleteLyrics(item.id)}
     />
   );
 }
@@ -34,9 +32,7 @@ export function PoemAction({ poem }: { poem: Poem }) {
       name="Poem"
       item={poem}
       EditForm={PoemForm}
-      onDelete={async (item) => {
-        await deletePoem(item.id);
-      }}
+      onDelete={(item) => deletePoem(item.id)}
     />
   );
 }
@@ -46,9 +42,7 @@ export function PoetAction({ poet }: { poet: Poet }) {
       name="Poet"
       item={poet}
       EditForm={PoetForm}
-      onDelete={async (item) => {
-        await deletePoet(item.id);
-      }}
+      onDelete={(item) => deletePoet(item.id)}
     />
   );
 }
@@ -58,9 +52,7 @@ export function ArtistAction({ artist }: { artist: Artist }) {
       name="Artist"
       item={artist}
       EditForm={ArtistForm}
-      onDelete={async (item) => {
-        await deleteArtist(item.id);
-      }}
+      onDelete={(item) => deleteArtist(item.id)}
     />
   );
 }

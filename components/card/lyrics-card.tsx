@@ -51,9 +51,13 @@ export function LyricsCard({
         </Link>
 
         <div className="flex justify-between items-start gap-2 mt-1">
-          <div className="flex flex-wrap items-center  text-sm text-gray-600 dark:text-gray-300">
+          <Link
+            href={`/artist/${artist.slug}`}
+            prefetch={false}
+            className="flex flex-wrap items-center  text-sm text-gray-600 hover:text-primary transition-colors duration-200 dark:text-gray-300"
+          >
             <span className="mr-2">{artist.name}</span>
-          </div>
+          </Link>
 
           {/* Heart icon */}
           <Favourite type="lyrics" id={id} favourite={favourite} />
@@ -94,13 +98,9 @@ export function LyricsCardSmall({
           </h3>
 
           <div className="flex w-full justify-between items-start gap-2 mt-1">
-            <Link
-              href={`/artist/${artist.slug}`}
-              prefetch={false}
-              className="flex flex-wrap items-center text-sm text-gray-600 hover:text-primary duration-200 transition-colors dark:text-gray-300"
-            >
+            <div className="flex flex-wrap items-center text-sm text-gray-600 dark:text-gray-300">
               <span className="mr-2 line-clamp-1">{artist.name}</span>
-            </Link>
+            </div>
           </div>
         </div>
       </Link>

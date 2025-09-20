@@ -23,7 +23,16 @@ interface ItemActionDropdownProps<T> {
   name: string; // e.g., "Lyrics", "Album"
   item: T;
   EditForm: React.ComponentType<{ item: T; onCloseForm: () => void }>;
-  onDelete: (item: T) => Promise<void>;
+  onDelete: (item: T) => Promise<
+    | {
+        error: string;
+        success?: undefined;
+      }
+    | {
+        success: boolean;
+        error?: undefined;
+      }
+  >;
 }
 
 export function ItemActionDropdown<T>({
@@ -40,8 +49,13 @@ export function ItemActionDropdown<T>({
 
   async function handleDelete() {
     try {
-      await onDelete(item);
-      toast.success(`${name} deleted successfully!`);
+      const result = await onDelete(item);
+      if (result.success) {
+        toast.success(`${name} deleted successfully!`);
+      }
+      if (result.error) {
+        toast.error(result.error);
+      }
       setIsDeleteOpen(false);
     } catch {
       toast.error(`Failed to delete ${name}`);
